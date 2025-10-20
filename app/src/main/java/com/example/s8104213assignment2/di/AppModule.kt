@@ -7,6 +7,8 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
+import okhttp3.OkHttpClient // <-- Import this
+import okhttp3.logging.HttpLoggingInterceptor // <-- Import this
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
 import javax.inject.Singleton
@@ -23,12 +25,31 @@ object AppModule {
             .build()
     }
 
+    // This creates the logger
     @Provides
     @Singleton
-    fun provideRetrofit(moshi: Moshi): Retrofit {
+    fun provideLoggingInterceptor(): HttpLoggingInterceptor {
+        return HttpLoggingInterceptor().apply {
+            level = HttpLoggingInterceptor.Level.BODY
+        }
+    }
+
+    // This creates a network client that uses the logger
+    @Provides
+    @Singleton
+    fun provideOkHttpClient(loggingInterceptor: HttpLoggingInterceptor): OkHttpClient {
+        return OkHttpClient.Builder()
+            .addInterceptor(loggingInterceptor)
+            .build()
+    }
+
+    @Provides
+    @Singleton
+    fun provideRetrofit(moshi: Moshi, okHttpClient: OkHttpClient): Retrofit { // <-- Add okHttpClient
         return Retrofit.Builder()
             .baseUrl("https://nit3213api.onrender.com/")
             .addConverterFactory(MoshiConverterFactory.create(moshi))
+            .client(okHttpClient) // <-- Tell Retrofit to use our new client
             .build()
     }
 

@@ -8,7 +8,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-// This import is now lowercase
+// This import is lowercase
 import com.example.s8104213assignment2.models.Entity
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -17,7 +17,7 @@ fun DetailsScreen(navController: NavController, entity: Entity) {
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("Details") },
+                title = { Text(entity.title ?: "Details") },
                 navigationIcon = {
                     IconButton(onClick = { navController.popBackStack() }) {
                         Icon(Icons.Default.ArrowBack, contentDescription = "Go Back")
@@ -32,16 +32,25 @@ fun DetailsScreen(navController: NavController, entity: Entity) {
                 .padding(padding)
                 .padding(16.dp)
         ) {
-            // Display ALL information
-            Text(text = "Property 1", style = MaterialTheme.typography.titleSmall)
-            // Handle null value
-            Text(text = entity.property1 ?: "N/A", style = MaterialTheme.typography.headlineSmall)
+            // Display ALL information using the correct names
+            Text(text = "Title", style = MaterialTheme.typography.titleSmall)
+            Text(text = entity.title ?: "N/A", style = MaterialTheme.typography.headlineSmall)
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            Text(text = "Property 2", style = MaterialTheme.typography.titleSmall)
-            // Handle null value
-            Text(text = entity.property2 ?: "N/A", style = MaterialTheme.typography.titleMedium)
+            Text(text = "Director", style = MaterialTheme.typography.titleSmall)
+            Text(text = entity.director ?: "N/A", style = MaterialTheme.typography.titleMedium)
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            Text(text = "Genre", style = MaterialTheme.typography.titleSmall)
+            Text(text = entity.genre ?: "N/A", style = MaterialTheme.typography.titleMedium)
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            Text(text = "Release Year", style = MaterialTheme.typography.titleSmall)
+            // .toString() is needed because releaseYear is an Int
+            Text(text = entity.releaseYear?.toString() ?: "N/A", style = MaterialTheme.typography.titleMedium)
 
             Spacer(modifier = Modifier.height(16.dp))
             Divider()
@@ -49,7 +58,6 @@ fun DetailsScreen(navController: NavController, entity: Entity) {
 
             Text(text = "Description", style = MaterialTheme.typography.titleMedium)
             Spacer(modifier = Modifier.height(8.dp))
-            // Handle null value
             Text(text = entity.description ?: "No description provided.", style = MaterialTheme.typography.bodyLarge)
         }
     }

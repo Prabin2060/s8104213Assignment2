@@ -19,8 +19,10 @@ data class LoginResponse(
 @Parcelize
 @JsonClass(generateAdapter = true)
 data class Entity(
-    val property1: String?,
-    val property2: String?,
+    val title: String?,       // This was property1
+    val director: String?,   // This was property2
+    val genre: String?,      // This is new
+    val releaseYear: Int?,  // This is new (and an Int, not a String)
     val description: String?
 ) : Parcelable
 

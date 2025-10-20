@@ -26,7 +26,7 @@ fun DashboardScreen(
 
     Scaffold(
         topBar = {
-            TopAppBar(title = { Text("Dashboard") })
+            TopAppBar(title = { Text("Dashboard (Movies)") })
         }
     ) { padding ->
         Box(
@@ -79,11 +79,10 @@ fun DashboardItem(entity: Entity, onClick: () -> Unit) {
         elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
-            // Display summary, EXCLUDING description
-
-            // THIS IS THE FIX: Using ?: to handle null values
-            Text(text = "Property 1: ${entity.property1 ?: "N/A"}", style = MaterialTheme.typography.titleMedium)
-            Text(text = "Property 2: ${entity.property2 ?: "N/A"}", style = MaterialTheme.typography.bodyMedium)
+            // Use the correct variable names
+            Text(text = entity.title ?: "N/A", style = MaterialTheme.typography.titleMedium)
+            Text(text = "Directed by: ${entity.director ?: "Unknown"}", style = MaterialTheme.typography.bodyMedium)
+            Text(text = "Genre: ${entity.genre ?: "Unknown"}", style = MaterialTheme.typography.bodySmall)
         }
     }
 }
