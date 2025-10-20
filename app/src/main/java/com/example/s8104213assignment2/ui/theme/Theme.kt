@@ -10,30 +10,45 @@ import androidx.compose.material3.dynamicLightColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.SideEffect
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
 import androidx.core.view.WindowCompat
 
-private val DarkColorScheme = darkColorScheme(
-    primary = Purple80,
-    secondary = PurpleGrey80,
-    tertiary = Pink80
+// Our new custom LIGHT theme
+private val LightColorScheme = lightColorScheme(
+    primary = VibrantBlue,
+    onPrimary = PureWhite,
+    secondary = VibrantBlue, // Use primary for secondary
+    onSecondary = PureWhite,
+    background = PureWhite,
+    onBackground = DarkText,
+    surface = PureWhite, // Cards, bottom sheets
+    onSurface = DarkText, // Text on cards
+    onSurfaceVariant = Color.Gray, // For subtitles
+    error = ErrorRed
 )
 
-private val LightColorScheme = lightColorScheme(
-    // This is now fixed to Purple40
-    primary = Purple40,
-    secondary = PurpleGrey40,
-    tertiary = Pink40
+// Our new custom DARK theme
+private val DarkColorScheme = darkColorScheme(
+    primary = VibrantBlueDark,
+    onPrimary = Color.Black,
+    secondary = VibrantBlueDark,
+    onSecondary = Color.Black,
+    background = SurfaceDark,
+    onBackground = LightText,
+    surface = SurfaceDarkVariant, // Cards will be a slightly lighter gray
+    onSurface = LightText,
+    onSurfaceVariant = Color.LightGray, // For subtitles
+    error = ErrorRedDark
 )
 
 @Composable
-// The function name is now lowercase to match your package
-fun S8104213assignment2Theme(
+fun S8104213assignment2Theme( // Make sure this is lowercase
     darkTheme: Boolean = isSystemInDarkTheme(),
-    // Dynamic color is available on Android 12+
-    dynamicColor: Boolean = true,
+    // THIS IS THE FIX! We force dynamicColor to be false.
+    dynamicColor: Boolean = false,
     content: @Composable () -> Unit
 ) {
     val colorScheme = when {
@@ -42,6 +57,7 @@ fun S8104213assignment2Theme(
             if (darkTheme) dynamicDarkColorScheme(context) else dynamicLightColorScheme(context)
         }
 
+        // It will now always pick our custom themes
         darkTheme -> DarkColorScheme
         else -> LightColorScheme
     }
@@ -49,14 +65,21 @@ fun S8104213assignment2Theme(
     if (!view.isInEditMode) {
         SideEffect {
             val window = (view.context as Activity).window
-            window.statusBarColor = colorScheme.primary.toArgb()
-            WindowCompat.getInsetsController(window, view).isAppearanceLightStatusBars = darkTheme
+
+            // Set status bar color to match the theme's background
+            window.statusBarColor = colorScheme.background.toArgb()
+
+            // This makes the app draw behind the status bar (edge-to-edge)
+            // WindowCompat.setDecorFitsSystemWindows(window, false) // <-- Let's disable this for a simpler, solid look
+
+            // This automatically changes status bar icons (clock, battery) to dark or light
+            WindowCompat.getInsetsController(window, view).isAppearanceLightStatusBars = !darkTheme
         }
     }
 
     MaterialTheme(
         colorScheme = colorScheme,
-        typography = Typography, // This comes from Type.kt
+        typography = Typography,
         content = content
     )
 }
